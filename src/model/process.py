@@ -25,8 +25,11 @@ class Process():
     def getTimeToFinish(self):
         return self.ttf
 
+    def updateTimeToFinish(self, quantum):
+        self.ttf -= quantum
+
     def isFinish(self):
         return self.finish
-    
+
     def setFinishedTrue(self):
         self.finish = True

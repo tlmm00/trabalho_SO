@@ -34,7 +34,7 @@ def rr(process_list, quantum, overload):
                 for j in range(overload): execution_sequence.append(-1)
 
                 time += (quantum + overload)
-                p.ttf -= quantum
+                p.updateTimeToFinish(quantum)
 
             
             
