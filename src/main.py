@@ -1,6 +1,7 @@
 from app.fifo import fifo
 from app.sjf import sjf
 from app.edf import edf
+from app.rr import rr
 from model.process import Process
 
 def main():
@@ -17,7 +18,7 @@ def main():
 
     print("antes:", [p.getId() for p in l])
 
-    newL = edf(l, quantum, overload)
+    newL = rr(l, quantum, overload)
 
     print("depois:", [p for p in newL])
 
