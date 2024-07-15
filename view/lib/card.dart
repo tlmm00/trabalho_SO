@@ -1,6 +1,4 @@
-import 'dart:ffi';
 
-import 'package:flutter/services.dart';
 import 'package:input_quantity/input_quantity.dart';
 import 'package:flutter/material.dart';
 
@@ -47,8 +45,8 @@ class _ProcessCard extends State<ProcessCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 200,
-      height: 150,
+      width: 400,
+      height: 350,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -64,8 +62,8 @@ class _ProcessCard extends State<ProcessCard> {
                       Text("init time: "),
                       InputQty(
                         minVal: 0,
-                        initVal: 0,
-                        onQtyChanged: (value) => {widget.setInitTime(value)},
+                        initVal: widget.getInitTime(),
+                        onQtyChanged: (value) => {setState(() => widget.setInitTime(value))},
                       )
                     ],
                   ),
@@ -75,8 +73,8 @@ class _ProcessCard extends State<ProcessCard> {
                       Text("deadline: "),
                       InputQty(
                         minVal: 0,
-                        initVal: 0,
-                        onQtyChanged: (value) => {widget.setDeadline(value)},
+                        initVal: widget.getDeadline(),
+                        onQtyChanged: (value) => {setState(() => widget.setDeadline(value))},
                       )
                     ],
                   ),
@@ -86,8 +84,8 @@ class _ProcessCard extends State<ProcessCard> {
                       Text("time to finish: "),
                       InputQty(
                         minVal: 0,
-                        initVal: 0,
-                        onQtyChanged: (value) => {widget.setTtf(value)},
+                        initVal: widget.getTtf(),
+                        onQtyChanged: (value) => {setState(() => widget.setTtf(value))},
                       )
                     ],
                   )

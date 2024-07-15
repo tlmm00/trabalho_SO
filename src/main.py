@@ -26,7 +26,18 @@ def main():
     app = Flask(__name__)
 
     @app.route('/api/data', methods=['GET'])
-    def get_data():
+    def get_data(methodId):
+        if(methodId == 0):
+            print("FIFO selected")
+        elif(methodId == 1):
+            print("EDF selected")
+        elif(methodId == 2):
+            print("RR selected")
+        elif(methodId == 3):
+            print("SJF selected")
+        else: 
+            print("METHOD ID NOT RECOGNIZED")
+
         data = {'message': 'Hello from Python backend!'}
         return jsonify(data)
 
