@@ -25,13 +25,14 @@ class _MyAppState extends State<MyApp> {
   final List<bool> _selectedList = <bool>[true, false, false, false];
   int selectedMethodId = 1;
 
-  List<Widget> cardList = [];
+  List<ProcessCard> cardList = [];
   int quantum = 0;
   int overload = 0;
 
   final CarouselController _controller = CarouselController();
 
-  Map<String, dynamic> data = {};
+  Map data = {};
+
   Future<void> conn(int methodId) async {
     String url = 'https://tlmm00.pythonanywhere.com/';
     if (methodId == 0) {
@@ -48,21 +49,39 @@ class _MyAppState extends State<MyApp> {
       url += 'SJF';
     }
 
-    print(url);
+    Map processes = {};
+    for (int i=0; i < cardList.length; i++) {
+      ProcessCard c = cardList[i];
+      processes[i] = {
+        "initTime": c.getInitTime(),
+        "timeToFinish": c.getTtf(),
+        "deadline": c.getDeadline()
+      };
+    }
 
-    Map data = {};
-    for (int i in cardList.length) {}
+    Map params() => {
+        "overload": overload,
+        "quantum": quantum
+    };
 
-    final response = await http.get(Uri.parse(url));
+    final body = {
+      "params": json.encode(params()),
+      "processes": json.encode(processes.toString()),
+    };
+
+    final response = await http.post(
+      Uri.parse(url),
+      body: body
+      );
 
     if (response.statusCode == 200) {
+      print("200");
       setState(() {
         data = json.decode(response.body);
       });
     } else {
-      print('Error getting data');
+      print('Err code: ' + response.statusCode.toString());
     }
-    //return response;
   }
 
   @override
