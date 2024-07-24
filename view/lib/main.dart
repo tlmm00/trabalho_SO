@@ -34,45 +34,42 @@ class _MyAppState extends State<MyApp> {
   Map data = {};
 
   Future<void> conn(int methodId) async {
-    String url = 'https://tlmm00.pythonanywhere.com/';
+    String url = 'tlmm00.pythonanywhere.com';
+    String methodExtension = "";
     if (methodId == 0) {
       // FIFO
-      url += 'FIFO';
+      methodExtension = '/FIFO';
     } else if (methodId == 1) {
       // EDF
-      url += 'EDF';
+      methodExtension = '/EDF';
     } else if (methodId == 2) {
       // FF
-      url += 'RR';
+      methodExtension = '/RR';
     } else {
       // SJF
-      url += 'SJF';
+      methodExtension = '/SJF';
     }
 
-    Map processes = {};
+    var processes = {};
     for (int i=0; i < cardList.length; i++) {
       ProcessCard c = cardList[i];
-      processes[i] = {
-        "initTime": c.getInitTime(),
-        "timeToFinish": c.getTtf(),
-        "deadline": c.getDeadline()
-      };
-    }
+      processes[i.toString()] = 
+        {
+          "initTime": c.getInitTime(),
+          "timeToFinish": c.getTtf(),
+          "deadline": c.getDeadline()
+        };
+      }
 
-    Map params() => {
-        "overload": overload,
-        "quantum": quantum
+    final queryParameters = {
+      "overload": overload.toString(),
+      "quantum": quantum.toString(),
+      // "processes": processes
     };
 
-    final body = {
-      "params": json.encode(params()),
-      "processes": json.encode(processes.toString()),
-    };
 
-    final response = await http.post(
-      Uri.parse(url),
-      body: body
-      );
+    final uri = Uri.http(url, methodExtension, processes);
+    final response = await http.get(uri, headers: queryParameters);
 
     if (response.statusCode == 200) {
       print("200");
