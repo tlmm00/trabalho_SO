@@ -3,46 +3,42 @@ from app.sjf import sjf
 from app.edf import edf
 from app.rr import rr
 from model.process import Process
-from flask import Flask, jsonify
+from flask import Flask, request
 
-def main():
-    quantum = 3
-    overload = 2
+app = Flask(__name__)
 
-    # l = [
-    #         # id, time_init, ttf, deadline
-    #     Process(1, 0, 3, 10),
-    #     Process(2, 3, 2, 25),
-    #     Process(3, 1, 5, 22),
-    #     Process(4, 5, 2, 18)
-    # ]
+@app.route('/FIFO')
+def do_fifo():
 
-    # print("antes:", [p.getId() for p in l])
+    # data = request.json
 
-    # newL = rr(l, quantum, overload)
+    ovld = request.args.get('params')['overload']
+    qtm = request.args.get('params')['quantum']
+    query_process = request.args.get('processes')
 
-    # print("depois:", [p for p in newL])
+    id = 0
+    process_list = []
+    for p in query_process:
+        process_list.append(
+            Process(id, p['initTime'], p['timeToFinish'], p['deadline']))
+        id+=1
 
-    app = Flask(__name__)
+    return fifo(process_list)
 
-    @app.route('/api/data', methods=['GET'])
-    def get_data(methodId):
-        if(methodId == 0):
-            print("FIFO selected")
-        elif(methodId == 1):
-            print("EDF selected")
-        elif(methodId == 2):
-            print("RR selected")
-        elif(methodId == 3):
-            print("SJF selected")
-        else: 
-            print("METHOD ID NOT RECOGNIZED")
+@app.route('/EDF', methods=['GET', 'POST'])
+def do_edf():
+    print('Hello from EDF!')
+    return 'Hello from EDF!'
 
-        data = {'message': 'Hello from Python backend!'}
-        return jsonify(data)
+@app.route('/RR', methods=['GET', 'POST'])
+def do_rr():
+    print('Hello from RR!')
+    return 'Hello from RR!'
 
-    if __name__ == '__main__':
-        app.run(debug=True)
+@app.route('/SJF', methods=['GET', 'POST'])
+def do_sjf():
+    print('Hello from SJF!')
+    return 'Hello from SJF!'
 
-if __name__ == '__main__':
-    main()
+
+

@@ -34,23 +34,24 @@ class _MyAppState extends State<MyApp> {
   Map data = {};
 
   Future<void> conn(int methodId) async {
-    String url = 'https://tlmm00.pythonanywhere.com/';
+    String url = 'tlmm00.pythonanywhere.com';
+    String route = '';
     if (methodId == 0) {
       // FIFO
-      url += 'FIFO';
+      route += '/FIFO';
     } else if (methodId == 1) {
       // EDF
-      url += 'EDF';
+      route += '/EDF';
     } else if (methodId == 2) {
       // FF
-      url += 'RR';
+      route += '/RR';
     } else {
       // SJF
-      url += 'SJF';
+      route += '/SJF';
     }
 
     Map processes = {};
-    for (int i=0; i < cardList.length; i++) {
+    for (int i = 0; i < cardList.length; i++) {
       ProcessCard c = cardList[i];
       processes[i] = {
         "initTime": c.getInitTime(),
@@ -59,28 +60,27 @@ class _MyAppState extends State<MyApp> {
       };
     }
 
-    Map params() => {
-        "overload": overload,
-        "quantum": quantum
-    };
+    Map params() => {"overload": overload, "quantum": quantum};
 
     final body = {
       "params": json.encode(params()),
       "processes": json.encode(processes.toString()),
     };
 
-    final response = await http.post(
-      Uri.parse(url),
-      body: body
-      );
+    print(body);
+    final uri = Uri.https(url, route, body);
+    print(uri);
+    final response = await http.get(uri);
 
     if (response.statusCode == 200) {
-      print("200");
+      print("status 200: OK");
       setState(() {
         data = json.decode(response.body);
       });
+      print(data);
     } else {
       print('Err code: ' + response.statusCode.toString());
+      print(response.body);
     }
   }
 
@@ -98,8 +98,7 @@ class _MyAppState extends State<MyApp> {
               backgroundColor: Theme.of(context).colorScheme.inversePrimary,
               title: const Text("Trabalho SO"),
             ),
-            body: Expanded(
-              flex: 1,
+            body: Flexible(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -126,7 +125,7 @@ class _MyAppState extends State<MyApp> {
                             Column(
                               children: [
                                 Row(children: [
-                                  Text("Quantum: "),
+                                  const Text("Quantum: "),
                                   InputQty(
                                     minVal: 0,
                                     initVal: 0,
@@ -138,7 +137,7 @@ class _MyAppState extends State<MyApp> {
                                   )
                                 ]),
                                 Row(children: [
-                                  Text("Overload: "),
+                                  const Text("Overload: "),
                                   InputQty(
                                     minVal: 0,
                                     initVal: 0,
@@ -220,11 +219,18 @@ class _MyAppState extends State<MyApp> {
                                   conn(selectedMethodId),
                                 },
                             backgroundColor: Colors.green,
-                            child: Text("START")),
+                            child: const Text("START")),
                         FloatingActionButton(
-                            onPressed: () => {print("RESET")},
+                            onPressed: () => {
+                                  print("RESET"),
+                                  setState(() {
+                                    cardList = [];
+                                    quantum = 0;
+                                    overload = 0;
+                                  }),
+                                },
                             backgroundColor: Colors.red,
-                            child: Text("RESET"))
+                            child: const Text("RESET"))
                       ],
                     ),
                   ]),
