@@ -50,24 +50,24 @@ class _MyAppState extends State<MyApp> {
       methodExtension = '/SJF';
     }
 
-    var processes = {};
+    Map<String, dynamic> processes = {};
     for (int i=0; i < cardList.length; i++) {
       ProcessCard c = cardList[i];
       processes[i.toString()] = 
-        {
+        json.encode({
           "initTime": c.getInitTime(),
           "timeToFinish": c.getTtf(),
           "deadline": c.getDeadline()
-        };
+        });
       }
 
-    final queryParameters = {
+    var queryParameters = {
       "overload": overload.toString(),
       "quantum": quantum.toString(),
       // "processes": processes
     };
 
-
+    print(processes);
     final uri = Uri.http(url, methodExtension, processes);
     final response = await http.get(uri, headers: queryParameters);
 
