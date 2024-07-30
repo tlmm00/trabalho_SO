@@ -35,52 +35,50 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> conn(int methodId) async {
     String url = 'tlmm00.pythonanywhere.com';
-    String route = '';
+    String methodExtension = "";
     if (methodId == 0) {
       // FIFO
-      route += '/FIFO';
+      methodExtension = '/FIFO';
     } else if (methodId == 1) {
       // EDF
-      route += '/EDF';
+      methodExtension = '/EDF';
     } else if (methodId == 2) {
       // FF
-      route += '/RR';
+      methodExtension = '/RR';
     } else {
       // SJF
-      route += '/SJF';
+      methodExtension = '/SJF';
     }
 
-    Map processes = {};
+    Map<String, dynamic> processes = {};
     for (int i = 0; i < cardList.length; i++) {
       ProcessCard c = cardList[i];
-      processes[i] = {
+      processes[i.toString()] = json.encode({
         "initTime": c.getInitTime(),
         "timeToFinish": c.getTtf(),
         "deadline": c.getDeadline()
-      };
+      });
     }
 
-    Map params() => {"overload": overload, "quantum": quantum};
-
-    final body = {
-      "params": json.encode(params()),
-      "processes": json.encode(processes.toString()),
+    var queryParameters = {
+      "numProcesses": processes.length.toString(),
+      "overload": overload.toString(),
+      "quantum": quantum.toString(),
+      // "processes": processes
     };
 
-    print(body);
-    final uri = Uri.https(url, route, body);
-    print(uri);
-    final response = await http.get(uri);
+    print(processes);
+    final uri = Uri.http(url, methodExtension, processes);
+    final response = await http.get(uri, headers: queryParameters);
 
     if (response.statusCode == 200) {
-      print("status 200: OK");
+      print("200");
+      print(json.decode(response.body));
       setState(() {
         data = json.decode(response.body);
       });
-      print(data);
     } else {
       print('Err code: ' + response.statusCode.toString());
-      print(response.body);
     }
   }
 
@@ -98,7 +96,8 @@ class _MyAppState extends State<MyApp> {
               backgroundColor: Theme.of(context).colorScheme.inversePrimary,
               title: const Text("Trabalho SO"),
             ),
-            body: Flexible(
+            body: Expanded(
+              flex: 1,
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -125,7 +124,7 @@ class _MyAppState extends State<MyApp> {
                             Column(
                               children: [
                                 Row(children: [
-                                  const Text("Quantum: "),
+                                  Text("Quantum: "),
                                   InputQty(
                                     minVal: 0,
                                     initVal: 0,
@@ -137,7 +136,7 @@ class _MyAppState extends State<MyApp> {
                                   )
                                 ]),
                                 Row(children: [
-                                  const Text("Overload: "),
+                                  Text("Overload: "),
                                   InputQty(
                                     minVal: 0,
                                     initVal: 0,
@@ -219,18 +218,11 @@ class _MyAppState extends State<MyApp> {
                                   conn(selectedMethodId),
                                 },
                             backgroundColor: Colors.green,
-                            child: const Text("START")),
+                            child: Text("START")),
                         FloatingActionButton(
-                            onPressed: () => {
-                                  print("RESET"),
-                                  setState(() {
-                                    cardList = [];
-                                    quantum = 0;
-                                    overload = 0;
-                                  }),
-                                },
+                            onPressed: () => {print("RESET")},
                             backgroundColor: Colors.red,
-                            child: const Text("RESET"))
+                            child: Text("RESET"))
                       ],
                     ),
                   ]),
