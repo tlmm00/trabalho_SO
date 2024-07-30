@@ -26,8 +26,8 @@ class _MyAppState extends State<MyApp> {
   int selectedMethodId = 1;
 
   List<ProcessCard> cardList = [];
-  int quantum = 0;
-  int overload = 0;
+  num quantum = 0;
+  num overload = 0;
 
   final CarouselController _controller = CarouselController();
 
@@ -43,12 +43,14 @@ class _MyAppState extends State<MyApp> {
       // EDF
       methodExtension = '/EDF';
     } else if (methodId == 2) {
-      // FF
+      // RR
       methodExtension = '/RR';
     } else {
       // SJF
       methodExtension = '/SJF';
     }
+
+    // print("url:" + url+methodExtension);
 
     Map<String, dynamic> processes = {};
     for (int i=0; i < cardList.length; i++) {
@@ -61,20 +63,25 @@ class _MyAppState extends State<MyApp> {
         });
       }
 
-    var queryParameters = {
+    var headerParams = {
+      "numProcesses": processes.length.toString(),
       "overload": overload.toString(),
       "quantum": quantum.toString(),
       // "processes": processes
     };
 
+    print(headerParams);
     print(processes);
     final uri = Uri.http(url, methodExtension, processes);
-    final response = await http.get(uri, headers: queryParameters);
+    final response = await http.get(uri, headers: headerParams);
 
     if (response.statusCode == 200) {
       print("200");
       setState(() {
-        data = json.decode(response.body);
+        Iterable l = json.decode(response.body);
+        
+        print(l);
+      // data[0] = l;
       });
     } else {
       print('Err code: ' + response.statusCode.toString());
@@ -124,9 +131,9 @@ class _MyAppState extends State<MyApp> {
                               children: [
                                 Row(children: [
                                   Text("Quantum: "),
-                                  InputQty(
+                                  InputQty.int(
                                     minVal: 0,
-                                    initVal: 0,
+                                    initVal: quantum,
                                     onQtyChanged: (value) => {
                                       setState(() {
                                         quantum = value;
@@ -136,9 +143,9 @@ class _MyAppState extends State<MyApp> {
                                 ]),
                                 Row(children: [
                                   Text("Overload: "),
-                                  InputQty(
+                                  InputQty.int(
                                     minVal: 0,
-                                    initVal: 0,
+                                    initVal: overload,
                                     onQtyChanged: (value) => {
                                       setState(() {
                                         overload = value;
@@ -219,7 +226,14 @@ class _MyAppState extends State<MyApp> {
                             backgroundColor: Colors.green,
                             child: Text("START")),
                         FloatingActionButton(
-                            onPressed: () => {print("RESET")},
+                            onPressed: () => {
+                              print("RESET"),
+                              setState(() => {
+                                overload = 0,
+                                quantum = 0,
+                                cardList.clear(),
+                              })
+                              },
                             backgroundColor: Colors.red,
                             child: Text("RESET"))
                       ],
