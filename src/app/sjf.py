@@ -27,7 +27,7 @@ def sjf(process_list):
     execution_order = []
     shortest_ttf = -1
 
-    time = 0
+    time = min([p.getTimeInit() for p in process_list])
     for p in sorted_process_list:
         l = [p for p in sorted_process_list if (p.getTimeInit() <= time and p not in execution_order)]
         
