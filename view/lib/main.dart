@@ -62,11 +62,7 @@ class _MyAppState extends State<MyApp> {
       });
     }
 
-<<<<<<< HEAD
-    var queryParameters = {
-=======
     var headerParams = {
->>>>>>> 186e2e4fb29404d6222af656dda14f4198e7fdc6
       "numProcesses": processes.length.toString(),
       "overload": overload.toString(),
       "quantum": quantum.toString(),
@@ -83,9 +79,9 @@ class _MyAppState extends State<MyApp> {
       print(json.decode(response.body));
       setState(() {
         Iterable l = json.decode(response.body);
-        
+
         print(l);
-      // data[0] = l;
+        // data[0] = l;
       });
     } else {
       print('Err code: ' + response.statusCode.toString());
@@ -231,13 +227,13 @@ class _MyAppState extends State<MyApp> {
                             child: Text("START")),
                         FloatingActionButton(
                             onPressed: () => {
-                              print("RESET"),
-                              setState(() => {
-                                overload = 0,
-                                quantum = 0,
-                                cardList.clear(),
-                              })
-                              },
+                                  print("RESET"),
+                                  setState(() {
+                                    overload = 0;
+                                    quantum = 0;
+                                    cardList.clear();
+                                  })
+                                },
                             backgroundColor: Colors.red,
                             child: Text("RESET"))
                       ],
