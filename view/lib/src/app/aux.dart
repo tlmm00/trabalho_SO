@@ -24,7 +24,7 @@ class Aux {
 
   Tuple2<Process, int> getMinDeadline(List<Process> processList) {
     int minDeadline = -1;
-    Process minDeadlineProcess = Process(null, null, null, null);
+    Process minDeadlineProcess = Process(-2, -2, -2, -2);
 
     for (var p in processList) {
       int pDeadline = p.getDeadline();
@@ -39,9 +39,9 @@ class Aux {
 
   Tuple2<Process, int> getMinTtf(List<Process> processList) {
     int minTtf = -1;
-    Process minTtfProcess = Process(null, null, null, null);
+    Process minTtfProcess = Process(-2, -2, -2, -2);
 
-    for (var p in processList) {
+    for (Process p in processList) {
       int pTtf = p.getTtf();
       if (minTtf == -1 || pTtf < minTtf) {
         minTtf = pTtf;

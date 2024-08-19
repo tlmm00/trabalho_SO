@@ -3,38 +3,49 @@ import 'package:flutter/material.dart';
 import 'package:view/src/model/process.dart';
 import 'package:view/src/app/aux.dart' show Aux;
 
-List<int> rr(List<Process> processList, int quantum, int overload) {
+List<int> rr(List<Process> processList, num quantum, num overload) {
   Aux aux = Aux();
 
   List<Process> sortedProcessList = aux.quickSortProcessByInitTime(processList);
   int n = sortedProcessList.length;
   List<int> executionOrderProcessId = [];
   List<Process> listDone = [];
+  List<Process> removeList = [];
 
-  int time = sortedProcessList[0].getTimeInit();
+  num time = sortedProcessList[0].getTimeInit();
+  // print(sortedProcessList.length);
+  // print(n);
   while (listDone.length != n) {
-    for (Process p in sortedProcessList) {
-      int pTtf = p.getTtf();
+    try {
+      for (Process p in sortedProcessList) {
+        int pTtf = p.getTtf();
+        if (pTtf <= quantum) {
+          int i;
+          for (i = 0; i < pTtf; i++) {
+            executionOrderProcessId.add(p.getId());
+          }
+          listDone.add(p);
+          // sortedProcessList.remove(p);
+          time += i;
+          removeList.add(p);
+        } else {
+          for (int i = 0; i < quantum; i++) {
+            executionOrderProcessId.add(p.getId());
+          }
+          for (int j = 0; j < overload; j++) {
+            // -1 = overload time
+            executionOrderProcessId.add(-1);
+          }
 
-      if (pTtf <= quantum) {
-        int i;
-        for (i = 0; i < pTtf; i++) {
-          executionOrderProcessId.add(p.getId());
+          time += (quantum + overload);
+          p.updateTtf(quantum.toInt());
         }
-        listDone.add(p);
-        sortedProcessList.remove(p);
-        time += i;
-      } else {
-        for (int i = 0; i < quantum; i++) {
-          executionOrderProcessId.add(p.getId());
-        }
-        for (int j = 0; j < quantum; j++) {
-          executionOrderProcessId.add(-1);
-        }
-
-        time += (quantum + overload);
-        p.updateTtf(quantum);
       }
+      for (Process p in removeList) {
+        sortedProcessList.remove(p);
+      }
+    } catch (e) {
+      print(e);
     }
   }
 

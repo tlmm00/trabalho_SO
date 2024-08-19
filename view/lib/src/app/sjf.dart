@@ -19,10 +19,14 @@ List<int> sjf(List<Process> processList) {
   int time = sortedProcessTtfList.reduce(min);
   for (Process p in sortedProcessList) {
     List<Process> l = sortedProcessList
-        .where((p) => p.getTimeInit() <= time && !executionOrder.contains(p))
+        .where((p) =>
+            p.getTimeInit() <= time && !executionOrder.contains(p.getId()))
         .toList();
 
+    // print(l.last.getId());
+
     Tuple2<Process, int> shortestJob = aux.getMinTtf(l);
+
     executionOrder.add(shortestJob.item1.getId());
 
     time += shortestJob.item2;

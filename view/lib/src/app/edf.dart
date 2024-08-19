@@ -4,7 +4,7 @@ import 'package:tuple/tuple.dart';
 import 'package:view/src/model/process.dart';
 import 'package:view/src/app/aux.dart' show Aux;
 
-List<int> edf(List<Process> processList, int quantum, int overload) {
+List<int> edf(List<Process> processList, num quantum, num overload) {
   Aux aux = Aux();
   List<Process> sortedProcessList = aux.quickSortProcessByInitTime(processList);
   List<Process> executionOrder = [];
@@ -15,10 +15,15 @@ List<int> edf(List<Process> processList, int quantum, int overload) {
         .where((p) => (p.getTimeInit() <= time && !executionOrder.contains(p)))
         .toList();
 
-    Tuple2<Process, int> earliestDeadlineJob = aux.getMinDeadline(l);
-    executionOrder.add(earliestDeadlineJob.item1);
+    if (!l.isEmpty) {
+      Tuple2<Process, int> earliestDeadlineJob = aux.getMinDeadline(l);
+      executionOrder.add(earliestDeadlineJob.item1);
 
-    time += earliestDeadlineJob.item1.getTtf();
+      time += earliestDeadlineJob.item1.getTtf();
+    } else {
+      executionOrder.add(p);
+      time += p.getTtf();
+    }
   }
 
   List<int> executionSequence = [];
