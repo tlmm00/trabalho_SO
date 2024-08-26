@@ -9,9 +9,15 @@ List<int> fifo(List<Process> processList) {
 
   List<int> executionList = [];
 
+  int time = 0;
   for (Process p in sortedProcessList) {
-    for (int i = 0; i < p.getTtf(); i++) {
-      executionList.add(p.getId());
+    if (p.getTimeInit() >= time) {
+      for (int i = 0; i < p.getTtf(); i++) {
+        executionList.add(p.getId());
+      }
+    } else {
+      time += 1;
+      executionList.add(0);
     }
   }
 
