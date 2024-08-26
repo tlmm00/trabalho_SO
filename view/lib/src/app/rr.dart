@@ -16,36 +16,32 @@ List<int> rr(List<Process> processList, num quantum, num overload) {
   // print(sortedProcessList.length);
   // print(n);
   while (listDone.length != n) {
-    try {
-      for (Process p in sortedProcessList) {
-        int pTtf = p.getTtf();
-        if (pTtf <= quantum) {
-          int i;
-          for (i = 0; i < pTtf; i++) {
-            executionOrderProcessId.add(p.getId());
-          }
-          listDone.add(p);
-          // sortedProcessList.remove(p);
-          time += i;
-          removeList.add(p);
-        } else {
-          for (int i = 0; i < quantum; i++) {
-            executionOrderProcessId.add(p.getId());
-          }
-          for (int j = 0; j < overload; j++) {
-            // -1 = overload time
-            executionOrderProcessId.add(-1);
-          }
-
-          time += (quantum + overload);
-          p.updateTtf(quantum.toInt());
+    for (Process p in sortedProcessList) {
+      int pTtf = p.getTtf();
+      if (pTtf <= quantum) {
+        int i;
+        for (i = 0; i < pTtf; i++) {
+          executionOrderProcessId.add(p.getId());
         }
+        listDone.add(p);
+        // sortedProcessList.remove(p);
+        time += i;
+        removeList.add(p);
+      } else {
+        for (int i = 0; i < quantum; i++) {
+          executionOrderProcessId.add(p.getId());
+        }
+        for (int j = 0; j < overload; j++) {
+          // -1 = overload time
+          executionOrderProcessId.add(-1);
+        }
+
+        time += (quantum + overload);
+        p.updateTtf(quantum.toInt());
       }
-      for (Process p in removeList) {
-        sortedProcessList.remove(p);
-      }
-    } catch (e) {
-      print(e);
+    }
+    for (Process p in removeList) {
+      sortedProcessList.remove(p);
     }
   }
 

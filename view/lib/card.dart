@@ -1,4 +1,3 @@
-
 import 'package:input_quantity/input_quantity.dart';
 import 'package:flutter/material.dart';
 
@@ -6,12 +5,14 @@ class ProcessCard extends StatefulWidget {
   ProcessCard({
     super.key,
     required this.processId,
+    this.cardColor = Colors.blue,
   });
 
   final int processId;
   num _initTime = 0;
   num _ttf = 0;
   num _deadline = 0;
+  Color cardColor;
 
   num getInitTime() {
     return _initTime;
@@ -52,7 +53,7 @@ class _ProcessCard extends State<ProcessCard> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              color: Colors.blue,
+              color: widget.cardColor,
               child: Column(
                 children: [
                   Text("#" + widget.processId.toString()),
@@ -63,7 +64,8 @@ class _ProcessCard extends State<ProcessCard> {
                       InputQty(
                         minVal: 0,
                         initVal: widget.getInitTime(),
-                        onQtyChanged: (value) => {setState(() => widget.setInitTime(value))},
+                        onQtyChanged: (value) =>
+                            {setState(() => widget.setInitTime(value))},
                       )
                     ],
                   ),
@@ -74,7 +76,8 @@ class _ProcessCard extends State<ProcessCard> {
                       InputQty(
                         minVal: 0,
                         initVal: widget.getDeadline(),
-                        onQtyChanged: (value) => {setState(() => widget.setDeadline(value))},
+                        onQtyChanged: (value) =>
+                            {setState(() => widget.setDeadline(value))},
                       )
                     ],
                   ),
@@ -85,7 +88,8 @@ class _ProcessCard extends State<ProcessCard> {
                       InputQty(
                         minVal: 0,
                         initVal: widget.getTtf(),
-                        onQtyChanged: (value) => {setState(() => widget.setTtf(value))},
+                        onQtyChanged: (value) =>
+                            {setState(() => widget.setTtf(value))},
                       )
                     ],
                   )

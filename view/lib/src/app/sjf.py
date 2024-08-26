@@ -34,7 +34,7 @@ def sjf(process_list):
         shortest_job, min_process_ttf = _get_min_ttf(l)
         execution_order.append(shortest_job)
 
-        sorted_process_list.remove(p)
+        sorted_process_list.remove(shortest_job)
 
         time += min_process_ttf
         # sorted_process_list.remove(shortest_job)

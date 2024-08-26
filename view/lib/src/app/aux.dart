@@ -43,6 +43,7 @@ class Aux {
 
     for (Process p in processList) {
       int pTtf = p.getTtf();
+      print("AUX: " + pTtf.toString());
       if (minTtf == -1 || pTtf < minTtf) {
         minTtf = pTtf;
         minTtfProcess = p;
@@ -50,5 +51,32 @@ class Aux {
     }
 
     return Tuple2(minTtfProcess, minTtf);
+  }
+
+  Map<int, List<int>> listToMatrix(List<int> processIdList) {
+    Map<int, List<int>> finalMap = {};
+    finalMap[-1] = [];
+    for (int n in processIdList.toSet()) {
+      if (n != -1) finalMap[n] = [];
+    }
+
+    for (int id in processIdList) {
+      if (id != -1) {
+        finalMap[-1]?.add(0);
+        for (int i = 0; i < processIdList.length; i++) {
+          if (i == id) {
+            finalMap[i]?.add(1);
+          } else {
+            finalMap[i]?.add(0);
+          }
+        }
+      } else {
+        finalMap[-1]?.add(1);
+        for (int i = 0; i < processIdList.length; i++) {
+          finalMap[i]?.add(0);
+        }
+      }
+    }
+    return finalMap;
   }
 }
