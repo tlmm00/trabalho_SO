@@ -5,7 +5,7 @@ import 'package:tuple/tuple.dart';
 import 'package:view/src/model/process.dart';
 import 'package:view/src/app/aux.dart' show Aux;
 
-List<int> sjf(List<Process> processList) {
+Map<int, List<int>> sjf(List<Process> processList) {
   Aux aux = Aux();
 
   List<Process> sortedProcessList = aux.quickSortProcessByInitTime(processList);
@@ -18,18 +18,18 @@ List<int> sjf(List<Process> processList) {
   }
 
   int n = sortedProcessList.length;
-  int time = sortedProcessTtfList.reduce(min);
+  int time = 0;
   while (executionOrder.length != n) {
     List<Process> l = sortedProcessList
         .where((p) =>
             p.getTimeInit() <= time && !executionOrder.contains(p.getId()))
         .toList();
+
     if (l.isEmpty) {
       time++;
+      executionList.add(-3);
     } else {
-      print(l);
       Tuple2<Process, int> shortestJob = aux.getMinTtf(l);
-      print(shortestJob.item1.getId());
 
       executionOrder.add(shortestJob.item1.getId());
       sortedProcessList
@@ -41,5 +41,5 @@ List<int> sjf(List<Process> processList) {
       time += shortestJob.item2;
     }
   }
-  return executionList;
+  return aux.listToMatrix(executionList);
 }

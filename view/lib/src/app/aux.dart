@@ -27,7 +27,7 @@ class Aux {
     Process minDeadlineProcess = Process(-2, -2, -2, -2);
 
     for (var p in processList) {
-      int pDeadline = p.getDeadline();
+      int pDeadline = p.getTimeInit() + p.getDeadline();
       if (minDeadline == -1 || pDeadline < minDeadline) {
         minDeadline = pDeadline;
         minDeadlineProcess = p;
@@ -57,11 +57,11 @@ class Aux {
     Map<int, List<int>> finalMap = {};
     finalMap[-1] = [];
     for (int n in processIdList.toSet()) {
-      if (n != -1) finalMap[n] = [];
+      if (!([-1, -3].contains(n))) finalMap[n] = [];
     }
 
     for (int id in processIdList) {
-      if (id != -1) {
+      if (!([-1, -3].contains(id))) {
         finalMap[-1]?.add(0);
         for (int i = 0; i < processIdList.length; i++) {
           if (i == id) {
@@ -71,7 +71,11 @@ class Aux {
           }
         }
       } else {
-        finalMap[-1]?.add(1);
+        if (id == -1) {
+          finalMap[-1]?.add(1);
+        } else if (id == -3) {
+          finalMap[-1]?.add(0);
+        }
         for (int i = 0; i < processIdList.length; i++) {
           finalMap[i]?.add(0);
         }

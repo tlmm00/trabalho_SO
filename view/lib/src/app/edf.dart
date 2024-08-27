@@ -4,51 +4,62 @@ import 'package:tuple/tuple.dart';
 import 'package:view/src/model/process.dart';
 import 'package:view/src/app/aux.dart' show Aux;
 
-List<int> edf(List<Process> processList, num quantum, num overload) {
+Map<int, List<int>> edf(List<Process> processList, num quantum, num overload) {
   Aux aux = Aux();
   List<Process> sortedProcessList = aux.quickSortProcessByInitTime(processList);
-  List<Process> executionOrder = [];
+  List<Process> listDone = [];
+
+  int n = sortedProcessList.length;
+
+  List<int> executionOrderProcessId = [];
 
   int time = 0;
-  for (Process p in sortedProcessList) {
-    List<Process> l = sortedProcessList
-        .where((p) => (p.getTimeInit() <= time && !executionOrder.contains(p)))
-        .toList();
+  while (listDone.length != n) {
+    List<Process> l =
+        sortedProcessList.where((p) => p.getTimeInit() <= time).toList();
 
-    if (!l.isEmpty) {
-      Tuple2<Process, int> earliestDeadlineJob = aux.getMinDeadline(l);
-      executionOrder.add(earliestDeadlineJob.item1);
+    int lenListDone = listDone.length;
+    print("n: $n, listDone.length: $lenListDone");
 
-      time += earliestDeadlineJob.item1.getTtf();
+    if (l.isEmpty) {
+      print("time++");
+      time++;
+      executionOrderProcessId.add(-3);
     } else {
-      executionOrder.add(p);
-      time += p.getTtf();
-    }
-  }
+      Tuple2 res = aux.getMinDeadline(l);
+      Process minDeadlineProcess = res.item1;
 
-  List<int> executionSequence = [];
-  for (Process p in executionOrder) {
-    int pTtf = p.getTtf();
-    if (pTtf <= quantum) {
-      for (int e = 0; e < pTtf; e++) {
-        executionSequence.add(p.getId());
-      }
-    } else {
-      int fullCicles = pTtf ~/ quantum;
-      for (int e = 0; e < fullCicles; e++) {
+      int pId = minDeadlineProcess.getId();
+      int pTtf = minDeadlineProcess.getTtf();
+
+      print(minDeadlineProcess.getId());
+
+      if (pTtf > quantum) {
         for (int i = 0; i < quantum; i++) {
-          executionSequence.add(p.getId());
+          executionOrderProcessId.add(pId);
         }
         for (int j = 0; j < overload; j++) {
-          executionSequence.add(-1);
+          executionOrderProcessId.add(-1);
         }
-      }
+        time += (quantum + overload).toInt();
 
-      for (int e = 0; e < pTtf.remainder(quantum); e++) {
-        executionSequence.add(p.getId());
+        sortedProcessList
+            .where((p) => p.getId() == pId)
+            .toList()
+            .first
+            .updateTtf(quantum.toInt());
+      } else {
+        int e;
+        for (e = 0; e < pTtf; e++) {
+          executionOrderProcessId.add(pId);
+        }
+
+        time += e;
+        sortedProcessList.removeWhere((p) => p.getId() == pId);
+        listDone.add(minDeadlineProcess);
       }
     }
   }
 
-  return executionSequence;
+  return aux.listToMatrix(executionOrderProcessId);
 }

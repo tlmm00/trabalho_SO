@@ -3,20 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:view/src/model/process.dart';
 import 'package:view/src/app/aux.dart' show Aux;
 
-List<int> rr(List<Process> processList, num quantum, num overload) {
+Map<int, List<int>> rr(List<Process> processList, num quantum, num overload) {
   Aux aux = Aux();
 
   List<Process> sortedProcessList = aux.quickSortProcessByInitTime(processList);
   int n = sortedProcessList.length;
   List<int> executionOrderProcessId = [];
   List<Process> listDone = [];
-  List<Process> removeList = [];
 
-  num time = sortedProcessList[0].getTimeInit();
-  // print(sortedProcessList.length);
-  // print(n);
+  num time = 0;
+
   while (listDone.length != n) {
-    for (Process p in sortedProcessList) {
+    List<Process> l =
+        sortedProcessList.where((p) => p.getTimeInit() <= time).toList();
+
+    if (l.isEmpty) {
+      time++;
+      executionOrderProcessId.add(-3);
+    } else {
+      Process p = l.first;
+      sortedProcessList.remove(p);
+
       int pTtf = p.getTtf();
       if (pTtf <= quantum) {
         int i;
@@ -26,7 +33,6 @@ List<int> rr(List<Process> processList, num quantum, num overload) {
         listDone.add(p);
         // sortedProcessList.remove(p);
         time += i;
-        removeList.add(p);
       } else {
         for (int i = 0; i < quantum; i++) {
           executionOrderProcessId.add(p.getId());
@@ -38,12 +44,10 @@ List<int> rr(List<Process> processList, num quantum, num overload) {
 
         time += (quantum + overload);
         p.updateTtf(quantum.toInt());
+        sortedProcessList.add(p);
       }
-    }
-    for (Process p in removeList) {
-      sortedProcessList.remove(p);
     }
   }
 
-  return executionOrderProcessId;
+  return aux.listToMatrix(executionOrderProcessId);
 }

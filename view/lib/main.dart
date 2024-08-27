@@ -67,25 +67,22 @@ class _MyAppHomeState extends State<MyAppHome> {
       print("error: " + error.toString());
     }
 
-    List<int> executionOrder;
+    Map<int, List<int>> listMatrix;
     if (methodId == 0) {
       // FIFO
-      executionOrder = fifo(processes);
+      listMatrix = fifo(processes);
     } else if (methodId == 1) {
       // EDF
-      executionOrder = edf(processes, quantum, overload);
+      listMatrix = edf(processes, quantum, overload);
     } else if (methodId == 2) {
       // RR
-      executionOrder = rr(processes, quantum, overload);
+      listMatrix = rr(processes, quantum, overload);
     } else {
       // SJF
-      executionOrder = sjf(processes);
+      listMatrix = sjf(processes);
     }
 
-    print("executionOrder:" + executionOrder.toString());
-    print("matrix: " + aux.listToMatrix(executionOrder).toString());
-
-    Map<int, List<int>> listMatrix = aux.listToMatrix(executionOrder);
+    print(listMatrix);
     double avgExecTime = 0;
     for (int id = 0; id < processes.length; id++) {
       int startTime = processes[id].getTimeInit();
@@ -93,8 +90,10 @@ class _MyAppHomeState extends State<MyAppHome> {
 
       print("$id: $startTime, $endTime");
 
-      avgExecTime = (endTime - startTime) / processes.length;
+      avgExecTime += (endTime - startTime).toDouble();
     }
+    print("n: ${processes.length}");
+    avgExecTime /= processes.length;
     return Tuple3(processes, listMatrix, avgExecTime);
   }
 
@@ -320,7 +319,7 @@ class _MyAppHomeState extends State<MyAppHome> {
                             } else if (index % lineSize == 0) {
                               txt = Text(lineId.toString());
                             } else {
-                              print("$index: $startTime $colId");
+                              // print("$index: $startTime $colId");
                               if (executionMatrix[lineId]?[colId] == 1) {
                                 boxColor = Colors.yellow;
                                 executionLineId = lineId;
@@ -343,7 +342,7 @@ class _MyAppHomeState extends State<MyAppHome> {
                                   boxColor = Colors.grey;
 
                                   if (startTime <= colId && flagFinished != 1) {
-                                    print("aqui");
+                                    // print("aqui");
                                     boxColor = Colors.orange;
                                   }
                                 }
