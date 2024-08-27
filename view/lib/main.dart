@@ -100,157 +100,186 @@ class _MyAppHomeState extends State<MyAppHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.blueGrey,
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: const Text("Trabalho SO"),
+          backgroundColor: Colors.blueGrey,
+          title: const Text(
+            "Process Scheduler",
+            style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+          ),
         ),
         body: SingleChildScrollView(
-          child: Flexible(
-            flex: 1,
-            child: Expanded(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ElevatedButton(
-                                onPressed: () => {
-                                      setState(() => cardList.add(
-                                            ProcessCard(
-                                                processId: cardList.length,
-                                                cardColor: (cardList.isEmpty)
-                                                    ? Colors.blue
-                                                    : (cardList.last
-                                                                .cardColor ==
-                                                            Colors.blue)
-                                                        ? Colors.red
-                                                        : (cardList.last
-                                                                    .cardColor ==
-                                                                Colors.red)
-                                                            ? Colors.yellow
-                                                            : Colors.blue),
-                                          ))
-                                    },
-                                child: const Text("+")),
-                            const Divider(),
-                            ElevatedButton(
-                                onPressed: () =>
-                                    {setState(() => cardList.removeLast())},
-                                child: const Text("-")),
-                            Column(
-                              children: [
-                                Row(children: [
-                                  Text("Quantum: "),
-                                  InputQty.int(
-                                    minVal: 1,
-                                    initVal: quantum,
-                                    onQtyChanged: (value) => {
-                                      setState(() {
-                                        quantum = value;
-                                      })
-                                    },
-                                  )
-                                ]),
-                                Row(children: [
-                                  Text("Overload: "),
-                                  InputQty.int(
-                                    minVal: 0,
-                                    initVal: overload,
-                                    onQtyChanged: (value) => {
-                                      setState(() {
-                                        overload = value;
-                                      })
-                                    },
-                                  )
-                                ]),
-                              ],
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 500,
-                          child: CarouselSlider(
-                            options: CarouselOptions(),
-                            carouselController: _controller,
-                            items: cardList,
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Flexible(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  _controller.previousPage();
-                                },
-                                child: const Text('<'),
-                              ),
-                            ),
-                            Flexible(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  _controller.nextPage();
-                                },
-                                child: const Text('>'),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Row(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Flexible(
+              flex: 1,
+              child: Expanded(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          ToggleButtons(
-                              isSelected: _selectedList,
-                              onPressed: (int index) {
-                                setState(() {
-                                  for (int i = 0;
-                                      i < _selectedList.length;
-                                      i++) {
-                                    _selectedList[i] = i == index;
-                                  }
-                                });
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () => {
+                                        setState(() => cardList.add(
+                                              ProcessCard(
+                                                  processId: cardList.length,
+                                                  cardColor: (cardList.isEmpty)
+                                                      ? Colors.blue
+                                                      : (cardList.last
+                                                                  .cardColor ==
+                                                              Colors.blue)
+                                                          ? Colors.red
+                                                          : (cardList.last
+                                                                      .cardColor ==
+                                                                  Colors.red)
+                                                              ? Colors.white70
+                                                              : Colors.blue),
+                                            ))
+                                      },
+                                  child: const Text("+")),
+                              const Divider(),
+                              ElevatedButton(
+                                  onPressed: () =>
+                                      {setState(() => cardList.removeLast())},
+                                  child: const Text("-")),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                                child: Column(
+                                  children: [
+                                    Row(children: [
+                                      const Text("Quantum: ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Container(
+                                        color: Colors.white60,
+                                        child: InputQty.int(
+                                          minVal: 1,
+                                          initVal: quantum,
+                                          onQtyChanged: (value) => {
+                                            setState(() {
+                                              quantum = value;
+                                            })
+                                          },
+                                        ),
+                                      )
+                                    ]),
+                                    Row(children: [
+                                      const Text("Overload: ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Container(
+                                        color: Colors.white60,
+                                        child: InputQty.int(
+                                          minVal: 0,
+                                          initVal: overload,
+                                          onQtyChanged: (value) => {
+                                            setState(() {
+                                              overload = value;
+                                            })
+                                          },
+                                        ),
+                                      )
+                                    ]),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 500,
+                            child: CarouselSlider(
+                              options: CarouselOptions(),
+                              carouselController: _controller,
+                              items: cardList,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Flexible(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      _controller.previousPage();
+                                    },
+                                    child: const Text('<'),
+                                  ),
+                                ),
+                                Flexible(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      _controller.nextPage();
+                                    },
+                                    child: const Text('>'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                color: Colors.white,
+                                child: ToggleButtons(
+                                    isSelected: _selectedList,
+                                    onPressed: (int index) {
+                                      setState(() {
+                                        for (int i = 0;
+                                            i < _selectedList.length;
+                                            i++) {
+                                          _selectedList[i] = i == index;
+                                        }
+                                      });
+                                    },
+                                    children: const [
+                                      Text("FIFO"),
+                                      Text("EDF"),
+                                      Text("RR"),
+                                      Text("SJF")
+                                    ]),
+                              )
+                            ]),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          FloatingActionButton(
+                              onPressed: () {
+                                showGridViewDialog(context);
                               },
-                              children: const [
-                                Text("FIFO"),
-                                Text("EDF"),
-                                Text("RR"),
-                                Text("SJF")
-                              ])
-                        ]),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        FloatingActionButton(
-                            onPressed: () {
-                              showGridViewDialog(context);
-                            },
-                            backgroundColor: Colors.green,
-                            child: Text("START")),
-                        FloatingActionButton(
-                            onPressed: () => {
-                                  print("RESET"),
-                                  setState(() {
-                                    overload = 0;
-                                    quantum = 0;
-                                    cardList.clear();
-                                  })
-                                },
-                            backgroundColor: Colors.red,
-                            child: Text("RESET"))
-                      ],
-                    ),
-                  ]),
+                              backgroundColor: Colors.green,
+                              child: Text("START")),
+                          FloatingActionButton(
+                              onPressed: () => {
+                                    print("RESET"),
+                                    setState(() {
+                                      overload = 0;
+                                      quantum = 0;
+                                      cardList.clear();
+                                    })
+                                  },
+                              backgroundColor: Colors.red,
+                              child: Text("RESET"))
+                        ],
+                      ),
+                    ]),
+              ),
             ),
           ),
         ));

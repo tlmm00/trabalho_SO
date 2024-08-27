@@ -10,7 +10,7 @@ class ProcessCard extends StatefulWidget {
 
   final int processId;
   num _initTime = 0;
-  num _ttf = 0;
+  num _ttf = 1;
   num _deadline = 0;
   Color cardColor;
 
@@ -31,7 +31,11 @@ class ProcessCard extends StatefulWidget {
   }
 
   void setTtf(num newTtf) {
-    _ttf = newTtf;
+    if (newTtf > 0) {
+      _ttf = newTtf;
+    } else {
+      _ttf = 1;
+    }
   }
 
   void setDeadline(num newDeadline) {
@@ -46,59 +50,82 @@ class _ProcessCard extends State<ProcessCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 400,
-      height: 350,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              color: widget.cardColor,
-              child: Column(
-                children: [
-                  Text("#" + widget.processId.toString()),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text("init time: "),
-                      InputQty(
-                        minVal: 0,
-                        initVal: widget.getInitTime(),
-                        onQtyChanged: (value) =>
-                            {setState(() => widget.setInitTime(value))},
-                      )
-                    ],
+        width: 400,
+        height: 350,
+        decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+        child: Center(
+          child: Container(
+            color: widget.cardColor,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(50.0),
+                  child: Text(
+                    "#${widget.processId.toString()}",
+                    style: const TextStyle(
+                        fontSize: 50, fontWeight: FontWeight.bold),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text("deadline: "),
-                      InputQty(
-                        minVal: 0,
-                        initVal: widget.getDeadline(),
-                        onQtyChanged: (value) =>
-                            {setState(() => widget.setDeadline(value))},
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text("time to finish: "),
-                      InputQty(
-                        minVal: 0,
-                        initVal: widget.getTtf(),
-                        onQtyChanged: (value) =>
-                            {setState(() => widget.setTtf(value))},
-                      )
-                    ],
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("init time: ",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                          InputQty(
+                            minVal: 0,
+                            initVal: widget.getInitTime(),
+                            onQtyChanged: (value) =>
+                                {setState(() => widget.setInitTime(value))},
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("deadline: ",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                          InputQty(
+                            minVal: 0,
+                            initVal: widget.getDeadline(),
+                            onQtyChanged: (value) =>
+                                {setState(() => widget.setDeadline(value))},
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("time to finish: ",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                          InputQty(
+                            minVal: 1,
+                            initVal: widget.getTtf(),
+                            onQtyChanged: (value) =>
+                                {setState(() => widget.setTtf(value))},
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }
