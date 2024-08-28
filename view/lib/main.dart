@@ -258,7 +258,7 @@ class _MyAppHomeState extends State<MyAppHome> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text("Speed: ",
+                          const Text("Delay: ",
                               style: TextStyle(fontWeight: FontWeight.bold)),
                           Slider(
                             min: 0.1,
