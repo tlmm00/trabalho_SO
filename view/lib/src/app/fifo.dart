@@ -30,6 +30,6 @@ Map<int, List<int>> fifo(List<Process> processList) {
     }
   }
 
-  print("executionList: $executionList");
+  // print("executionList: $executionList");
   return aux.listToMatrix(executionList);
 }

@@ -18,11 +18,10 @@ Map<int, List<int>> edf(List<Process> processList, num quantum, num overload) {
     List<Process> l =
         sortedProcessList.where((p) => p.getTimeInit() <= time).toList();
 
-    int lenListDone = listDone.length;
-    print("n: $n, listDone.length: $lenListDone");
+    // print("n: $n, listDone.length: ${listDone.length}");
 
     if (l.isEmpty) {
-      print("time++");
+      // print("time++");
       time++;
       executionOrderProcessId.add(-3);
     } else {
@@ -32,7 +31,7 @@ Map<int, List<int>> edf(List<Process> processList, num quantum, num overload) {
       int pId = minDeadlineProcess.getId();
       int pTtf = minDeadlineProcess.getTtf();
 
-      print(minDeadlineProcess.getId());
+      // print(minDeadlineProcess.getId());
 
       if (pTtf > quantum) {
         for (int i = 0; i < quantum; i++) {
