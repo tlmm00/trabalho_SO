@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import 'package:view/src/model/process.dart';
 import 'package:view/src/app/aux.dart' show Aux;
 

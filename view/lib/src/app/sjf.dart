@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'dart:math';
 import 'package:tuple/tuple.dart';
 
 import 'package:view/src/model/process.dart';
@@ -9,7 +7,7 @@ Map<int, List<int>> sjf(List<Process> processList) {
   Aux aux = Aux();
 
   List<Process> sortedProcessList = aux.quickSortProcessByInitTime(processList);
-  List<int> executionOrder = [];
+  List<int> listDone = [];
   List<int> executionList = [];
 
   List<int> sortedProcessTtfList = [];
@@ -19,10 +17,9 @@ Map<int, List<int>> sjf(List<Process> processList) {
 
   int n = sortedProcessList.length;
   int time = 0;
-  while (executionOrder.length != n) {
+  while (listDone.length != n) {
     List<Process> l = sortedProcessList
-        .where((p) =>
-            p.getTimeInit() <= time && !executionOrder.contains(p.getId()))
+        .where((p) => p.getTimeInit() <= time && !listDone.contains(p.getId()))
         .toList();
 
     if (l.isEmpty) {
@@ -31,7 +28,7 @@ Map<int, List<int>> sjf(List<Process> processList) {
     } else {
       Tuple2<Process, int> shortestJob = aux.getMinTtf(l);
 
-      executionOrder.add(shortestJob.item1.getId());
+      listDone.add(shortestJob.item1.getId());
       sortedProcessList
           .removeWhere((p) => p.getId() == shortestJob.item1.getId());
 

@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter/material.dart';
 import 'package:input_quantity/input_quantity.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:http/http.dart' as http;
 import 'package:tuple/tuple.dart';
 import 'package:view/src/app/aux.dart';
 import 'package:view/src/model/process.dart';

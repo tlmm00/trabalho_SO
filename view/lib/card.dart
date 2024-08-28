@@ -75,7 +75,7 @@ class _ProcessCard extends State<ProcessCard> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("init time: ",
+                          const Text("Init Time: ",
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold)),
                           InputQty(
@@ -92,7 +92,7 @@ class _ProcessCard extends State<ProcessCard> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("deadline: ",
+                          const Text("Deadline: ",
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold)),
                           InputQty(
@@ -109,7 +109,7 @@ class _ProcessCard extends State<ProcessCard> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("time to finish: ",
+                          const Text("Time to Finish: ",
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold)),
                           InputQty(
