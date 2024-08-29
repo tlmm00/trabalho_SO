@@ -95,7 +95,7 @@ class _MyAppHomeState extends State<MyAppHome> {
     return Tuple3(processes, listMatrix, avgExecTime);
   }
 
-  double _currentSliderValue = 0.1;
+  double currentSliderValue = 0.1;
 
   @override
   Widget build(BuildContext context) {
@@ -128,6 +128,7 @@ class _MyAppHomeState extends State<MyAppHome> {
                             children: [
                               ElevatedButton(
                                   onPressed: () => {
+                                        setState(() {}),
                                         setState(() => cardList.add(
                                               ProcessCard(
                                                   processId: cardList.length,
@@ -142,7 +143,8 @@ class _MyAppHomeState extends State<MyAppHome> {
                                                                   Colors.red)
                                                               ? Colors.white70
                                                               : Colors.blue),
-                                            ))
+                                            )),
+                                        setState(() {}),
                                       },
                                   child: const Text("+")),
                               const Divider(),
@@ -263,10 +265,10 @@ class _MyAppHomeState extends State<MyAppHome> {
                           Slider(
                             min: 0.1,
                             max: 5,
-                            value: _currentSliderValue,
+                            value: currentSliderValue,
                             onChanged: (double value) {
                               setState(() {
-                                _currentSliderValue = value;
+                                currentSliderValue = value;
                               });
                             },
                           ),
@@ -289,6 +291,7 @@ class _MyAppHomeState extends State<MyAppHome> {
                                       overload = 0;
                                       quantum = 0;
                                       cardList.clear();
+                                      currentSliderValue = 0.1;
                                     })
                                   },
                               backgroundColor: Colors.red,
@@ -335,89 +338,91 @@ class _MyAppHomeState extends State<MyAppHome> {
                   width: double.maxFinite,
                   child: Column(
                     children: [
-                      GridView.builder(
-                          itemCount: n,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: lineSize,
-                          ),
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            Text txt = const Text("");
-                            Color boxColor = Colors.transparent;
-                            int lineId = index ~/ lineSize;
-                            int colId = index % lineSize - 1;
-                            // int timeLineId = executionMatrix.length;
+                      Center(
+                        child: GridView.builder(
+                            itemCount: n,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: lineSize,
+                            ),
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              Text txt = const Text("");
+                              Color boxColor = Colors.transparent;
+                              int lineId = index ~/ lineSize;
+                              int colId = index % lineSize - 1;
+                              // int timeLineId = executionMatrix.length;
 
-                            if (colId == -1) {
-                              // célula de index de linha
-                              if (index == 0) {
-                                txt = const Text("0");
-                              } else {
-                                if (lineId != executionMatrix.length - 1)
-                                  txt = Text(lineId.toString());
-                              }
-                            } else if (lineId == executionMatrix.length - 1) {
-                              // célula de index de coluna
-                              txt = Text(colId.toString());
-                            } else {
-                              // célula normal
-
-                              Process p = pList[lineId];
-                              int startTime = p.getTimeInit();
-
-                              if (startTime >= colId) {
-                                flagFinished = 0;
-                              }
-
-                              if (!executionMatrix[lineId]!
-                                  .sublist(colId + 1)
-                                  .contains(1)) {
-                                flagFinished = 1;
-                              }
-                              if (executionMatrix[lineId]?[colId] == 1) {
-                                boxColor = Colors.yellow;
-                                executionLineId = lineId;
-                                flagFinished = 0;
-
-                                if ((p.getTimeInit() + p.getDeadline()) <=
-                                    colId) {
-                                  boxColor = Colors.purple;
-                                }
-                                if (colId > p.getTimeInit() &&
-                                    startTime == p.getTimeInit()) {
-                                  startTime = colId;
-                                }
-                              } else {
-                                if (executionMatrix[-1]?[colId] == 1 &&
-                                    executionLineId == lineId) {
-                                  boxColor = Colors.red;
+                              if (colId == -1) {
+                                // célula de index de linha
+                                if (index == 0) {
+                                  txt = const Text("0");
                                 } else {
-                                  executionLineId = null;
-                                  boxColor = Colors.grey;
+                                  if (lineId != executionMatrix.length - 1)
+                                    txt = Text(lineId.toString());
+                                }
+                              } else if (lineId == executionMatrix.length - 1) {
+                                // célula de index de coluna
+                                txt = Text(colId.toString());
+                              } else {
+                                // célula normal
+                                Process p = pList[lineId];
+                                int startTime = p.getTimeInit();
 
-                                  if (startTime <= colId && flagFinished != 1) {
-                                    boxColor = Colors.orange;
+                                if (startTime >= colId) {
+                                  flagFinished = 0;
+                                }
+
+                                if (!executionMatrix[lineId]!
+                                    .sublist(colId + 1)
+                                    .contains(1)) {
+                                  flagFinished = 1;
+                                }
+                                if (executionMatrix[lineId]?[colId] == 1) {
+                                  boxColor = Colors.yellow;
+                                  executionLineId = lineId;
+                                  flagFinished = 0;
+
+                                  if ((p.getTimeInit() + p.getDeadline()) <=
+                                      colId) {
+                                    boxColor = Colors.purple;
+                                  }
+                                  if (colId > p.getTimeInit() &&
+                                      startTime == p.getTimeInit()) {
+                                    startTime = colId;
+                                  }
+                                } else {
+                                  if (executionMatrix[-1]?[colId] == 1 &&
+                                      executionLineId == lineId) {
+                                    boxColor = Colors.red;
+                                  } else {
+                                    executionLineId = null;
+                                    boxColor = Colors.grey;
+
+                                    if (startTime <= colId &&
+                                        flagFinished != 1) {
+                                      boxColor = Colors.orange;
+                                    }
                                   }
                                 }
                               }
-                            }
 
-                            return Padding(
-                                    padding: const EdgeInsets.all(2),
-                                    child: Container(
-                                        height: 50,
-                                        width: 50,
-                                        color: boxColor,
-                                        child: Center(child: txt)))
-                                .animate()
-                                .fadeIn(
-                                    delay: Duration(
-                                        microseconds: (500000 *
-                                                (colId + 1) *
-                                                _currentSliderValue)
-                                            .toInt()));
-                          }),
+                              return Padding(
+                                      padding: const EdgeInsets.all(2),
+                                      child: Container(
+                                          height: 50,
+                                          width: 50,
+                                          color: boxColor,
+                                          child: Center(child: txt)))
+                                  .animate()
+                                  .fadeIn(
+                                      delay: Duration(
+                                          microseconds: (500000 *
+                                                  (colId + 1) *
+                                                  currentSliderValue)
+                                              .toInt()));
+                            }),
+                      ),
                       Text(
                           "Average Execution time: ${avgExecTime.toStringAsFixed(2)}")
                     ],

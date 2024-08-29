@@ -6,16 +6,17 @@ import 'package:view/src/app/aux.dart' show Aux;
 Map<int, List<int>> edf(List<Process> processList, num quantum, num overload) {
   Aux aux = Aux();
   List<Process> sortedProcessList = aux.quickSortProcessByInitTime(processList);
-  List<Process> listDone = [];
 
   int n = sortedProcessList.length;
 
+  List<int> listDone = [];
   List<int> executionOrderProcessId = [];
 
   int time = 0;
   while (listDone.length != n) {
-    List<Process> l =
-        sortedProcessList.where((p) => p.getTimeInit() <= time).toList();
+    List<Process> l = sortedProcessList
+        .where((p) => p.getTimeInit() <= time && !listDone.contains(p.getId()))
+        .toList();
 
     // print("n: $n, listDone.length: ${listDone.length}");
 
@@ -53,8 +54,7 @@ Map<int, List<int>> edf(List<Process> processList, num quantum, num overload) {
         }
 
         time += e;
-        sortedProcessList.removeWhere((p) => p.getId() == pId);
-        listDone.add(minDeadlineProcess);
+        listDone.add(pId);
       }
     }
   }

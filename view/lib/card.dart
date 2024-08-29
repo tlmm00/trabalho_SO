@@ -81,8 +81,9 @@ class _ProcessCard extends State<ProcessCard> {
                           InputQty(
                             minVal: 0,
                             initVal: widget.getInitTime(),
-                            onQtyChanged: (value) =>
-                                {setState(() => widget.setInitTime(value))},
+                            onQtyChanged: (value) => {
+                              setState(() => widget.setInitTime(value.toInt()))
+                            },
                           )
                         ],
                       ),
@@ -98,8 +99,9 @@ class _ProcessCard extends State<ProcessCard> {
                           InputQty(
                             minVal: 0,
                             initVal: widget.getDeadline(),
-                            onQtyChanged: (value) =>
-                                {setState(() => widget.setDeadline(value))},
+                            onQtyChanged: (value) => {
+                              setState(() => widget.setDeadline(value.toInt()))
+                            },
                           )
                         ],
                       ),
@@ -116,7 +118,7 @@ class _ProcessCard extends State<ProcessCard> {
                             minVal: 1,
                             initVal: widget.getTtf(),
                             onQtyChanged: (value) =>
-                                {setState(() => widget.setTtf(value))},
+                                {setState(() => widget.setTtf(value.toInt()))},
                           )
                         ],
                       ),
